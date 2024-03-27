@@ -1,4 +1,13 @@
 const options = ["rock", "paper", "scissors"];
+const btns = document.querySelectorAll('button');
+const results = document.querySelector('.results');
+
+const score = document.querySelector('.running-score');
+let playerScore = document.createElement('p');
+let pcScore = document.createElement('p');
+score.append(playerScore, pcScore)
+
+
 let pcWins = 0;
 let playerWins = 0;
 
@@ -42,23 +51,46 @@ function playRound(playerSelection, computerSelection) {
 
 // Get input of user and pc selection and play round
 function playGame() {
-  const playerSelection = prompt("Rock, paper, scissors?").toLowerCase().trim();
-  const computerSelection = getComputerChoice();
-  console.log(playRound(playerSelection, computerSelection));
+  //const playerSelection = prompt("Rock, paper, scissors?").toLowerCase().trim();
+  
+  btns.forEach((selection) => {
+    selection.addEventListener('click', () => {
+      const computerSelection = getComputerChoice();
+
+      // Create results
+      let result = document.createElement('p');
+      result.innerText = playRound(selection.textContent, computerSelection);
+      results.appendChild(result);
+
+      // Update the running score
+      playerScore.innerText = `Player: ${playerWins}`;
+      pcScore.innerText = `PC: ${pcWins}`;
+
+      if (playerWins === 5 || pcWins === 5) {
+        displayWinner();
+      };
+    });
+  });
+
 }
 
-// Call the playGame function 5 times
-for (let i = 0; i < 5; i++) {
-  playGame();
-}
+playGame();
 
-// Display winner of the game
-if (playerWins > pcWins) {
-    console.log(`You win the game! Your wins: ${playerWins}, Pc wins: ${pcWins}`)
-}
-else if (playerWins < pcWins) {
-    console.log(`You Lose the game! Your wins: ${playerWins}, Pc wins: ${pcWins}`)
-}
-else {
-    console.log(`There was a Tie! Your wins: ${playerWins}, Pc wins: ${pcWins}`)
-}
+function displayWinner() {
+  // Hide buttons
+  btns.forEach(item => {
+    item.style.display = 'none';
+  });
+
+  let winner = document.createElement('h1');
+  results.appendChild(winner);
+
+  // Display winner of the game
+  if (playerWins > pcWins) {
+      winner.innerText = `You win the game! Your wins: ${playerWins}, Pc wins: ${pcWins}`;
+  }
+  else {
+      winner.innerText = `You Lose the game! Your wins: ${playerWins}, Pc wins: ${pcWins}`;
+  }
+  
+};
